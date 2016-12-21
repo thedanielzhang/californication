@@ -18,16 +18,30 @@ namespace SpotiFind.Controllers
         private SpotiFindContext db = new SpotiFindContext();
 
         // GET: api/Locations
-        public IQueryable<Location> GetLocations()
+        public IQueryable<LocationDTO> GetLocations()
         {
-            return db.Locations;
+            var locations = from l in db.Locations
+                            select new LocationDTO()
+                            {
+                                Id = l.Id,
+                                Place = l.Place,
+                                Playlist = l.Playlist
+                            };
+
+            return locations;
         }
 
         // GET: api/Locations/5
-        [ResponseType(typeof(Location))]
+        [ResponseType(typeof(LocationDTO))]
         public async Task<IHttpActionResult> GetLocation(int id)
         {
-            Location location = await db.Locations.FindAsync(id);
+            var location = await db.Locations.Select(l =>
+                new LocationDTO()
+                {
+                    Id = l.Id,
+                    Place = l.Place,
+                    Playlist = l.Playlist
+                }).SingleOrDefaultAsync(l => l.Id == id);
             if (location == null)
             {
                 return NotFound();
@@ -75,7 +89,7 @@ namespace SpotiFind.Controllers
         [ResponseType(typeof(Location))]
         public async Task<IHttpActionResult> PostLocation(Location location)
         {
-            if (!ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -83,7 +97,14 @@ namespace SpotiFind.Controllers
             db.Locations.Add(location);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = location.Id }, location);
+            var dto = new LocationDTO()
+            {
+                Id = location.Id,
+                Place = location.Place,
+                Playlist = location.Playlist
+            };
+
+            return CreatedAtRoute("DefaultApi", new { id = location.Id }, dto);
         }
 
         // DELETE: api/Locations/5
