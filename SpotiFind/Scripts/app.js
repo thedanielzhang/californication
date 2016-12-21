@@ -2,7 +2,12 @@
     var self = this;
     self.locations = ko.observableArray();
     self.error = ko.observable();
-    self.detail = ko.observable();
+    self.detail = ko.observableArray();
+
+    self.newLocation = {
+        Place: ko.observable(),
+        Playlist: ko.observable()
+    }
 
     var locationsUri = 'api/locations/';
 
@@ -28,6 +33,17 @@
     self.getLocationDetail = function (item) {
         ajaxHelper(locationsUri + item.Id, 'GET').done(function (data) {
             self.detail(data);
+        });
+    }
+
+    self.addLocation = function (formElement) {
+        var location = {
+            Place: self.newLocation.Place(),
+            Playlist: self.newLocation.Playlist()
+        };
+
+        ajaxHelper(locationsUri, 'POST', location).done(function (item) {
+            self.locations.push(item);
         });
     }
 
