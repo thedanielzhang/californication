@@ -90,3 +90,5 @@ C:\repos\californication\SpotiFind\obj\Debug\SpotiFind.dll
 C:\repos\californication\SpotiFind\obj\Debug\SpotiFind.pdb
 C:\repos\californication\SpotiFind\bin\SpotifyAPI.dll
 C:\repos\californication\SpotiFind\bin\SpotifyAPI.xml
+C:\repos\californication\SpotiFind\obj\Debug\SpotiFind.Migrations.Initial.resources
+C:\repos\californication\SpotiFind\obj\Debug\SpotiFind.csproj.GenerateResource.Cache
