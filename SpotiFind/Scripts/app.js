@@ -2,6 +2,7 @@
     var self = this;
     self.locations = ko.observableArray();
     self.error = ko.observable();
+    self.detail = ko.observable();
 
     var locationsUri = 'api/locations/';
 
@@ -23,6 +24,14 @@
             self.locations(data);
         });
     }
+
+    self.getLocationDetail = function (item) {
+        ajaxHelper(locationsUri + item.Id, 'GET').done(function (data) {
+            self.detail(data);
+        });
+    }
+
+
 
     getAllLocations();
 

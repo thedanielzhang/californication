@@ -29,7 +29,8 @@ namespace SpotiFind.Migrations
             //
             context.Locations.AddOrUpdate(
                 p => p.Id,
-                new Location() { Id = 0, Place = "ChIJC4xmE1LdMIgRyQsQaH9Aawk", Playlist = "5TJ9mC3q0XG5uLzQTkCeo2" }
+                new Location() { Place = "ChIJC4xmE1LdMIgRyQsQaH9Aawk", Playlist = "5TJ9mC3q0XG5uLzQTkCeo2" },
+                new Location() { Place = "ChIJPQ0hEC58hYARfg7S103XOZY", Playlist = "37i9dQZF1DZ06evO1irWRq" }
                 );
         }
     }
