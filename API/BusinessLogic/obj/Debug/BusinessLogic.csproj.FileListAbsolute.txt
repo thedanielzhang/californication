@@ -1,0 +1,1 @@
+C:\repos\californication\API\BusinessLogic\obj\Debug\BusinessLogic.csprojResolveAssemblyReference.cache
