@@ -45,7 +45,8 @@ namespace SpotiFind.Controllers
         public async Task<IHttpActionResult> GetLocation(int id)
         {
             var l = businessLogic.GetLocationById(id);
-            var p = businessLogic.GetPlaceById(id);
+            var place = businessLogic.GetPlaceById(id);
+            var playlist = businessLogic.GetPlaylistById(id);
 
             if (l == null)
             {
@@ -56,13 +57,13 @@ namespace SpotiFind.Controllers
 
             {
                 Id = l.Id,
-                PlaylistId = l.PlaylistId,
+                PlaylistName = playlist.Name,
 
-                PlaceName = p.Name,
-                PlaceAddress = p.Address,
+                PlaceName = place.Name,
+                PlaceAddress = place.Address,
                 
-                PlaceLatitude = p.Latitude,
-                PlaceLongitude = p.Longitude
+                PlaceLatitude = place.Latitude,
+                PlaceLongitude = place.Longitude
             };
 
             return Ok(locationDetail);

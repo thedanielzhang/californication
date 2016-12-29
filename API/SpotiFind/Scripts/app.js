@@ -6,7 +6,7 @@
 
     self.newLocation = {
         Place: ko.observable(),
-        PlaylistId: ko.observable()
+        PlaylistName: ko.observable()
     }
 
     var locationsUri = 'api/locations/';
@@ -36,16 +36,16 @@
         });
     }
 
-    self.addLocation = function (formElement) {
-        var location = {
-            Place: self.newLocation.Place(),
-            Playlist: self.newLocation.PlaylistId()
-        };
+    //self.addLocation = function (formElement) {
+    //    var location = {
+    //        Place: self.newLocation.Place(),
+    //        Playlist: self.newLocation.PlaylistName()
+    //    };
 
-        ajaxHelper(locationsUri, 'POST', location).done(function (item) {
-            self.locations.push(item);
-        });
-    }
+    //    ajaxHelper(locationsUri, 'POST', location).done(function (item) {
+    //        self.locations.push(item);
+    //    });
+    //}
 
 
 

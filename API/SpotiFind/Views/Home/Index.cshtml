@@ -13,7 +13,7 @@
             <div class="panel-body">
                 <ul class="list-unstyled" data-bind="foreach: locations">
                     <li>
-                        <strong><span data-bind="text: PlaceName"></span></strong> <span data-bind="text: PlaylistId"></span>
+                        <strong><span data-bind="text: Place"></span></strong> <span data-bind="text: PlaylistId"></span>
                         <small><a href="#" data-bind="click: $parent.getLocationDetail">Details</a></small>
                     </li>
                 </ul>
@@ -29,7 +29,7 @@
             </div>
             <table class="table">
                 <tr><td>Place Name</td><td data-bind="text: detail().PlaceName"></td></tr>
-                <tr><td>Playlist</td><td data-bind="text: detail().PlaylistId"></td></tr>
+                <tr><td>Playlist</td><td data-bind="text: detail().PlaylistName"></td></tr>
             </table>
         </div>
     </div>
