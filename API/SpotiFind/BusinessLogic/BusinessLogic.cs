@@ -13,6 +13,11 @@ using SpotiFind.Models;
 using System.Xml.Linq;
 using SpotiFind.ExtensionMethods;
 using System.Web.Script.Serialization;
+using SpotifyAPI.Web; //Base Namespace
+using SpotifyAPI.Web.Auth; //All Authentication-related classes
+using SpotifyAPI.Web.Enums; //Enums
+using SpotifyAPI.Web.Models; //Models for the JSON-responses
+using System.Windows.Forms;
 
 
 
@@ -20,8 +25,12 @@ namespace SpotiFind.BusinessLogic
 {
     public class BusinessLogic
     {
+        private static SpotifyWebAPI _spotify;
+
         private string _apiKey = "AIzaSyBlBngVE6JZlHI649il6Lx3AKtiNolG2-Q";
+
         private SpotiFindContext db = new SpotiFindContext();
+        private string _userId = "12133684664";
 
         public List<Location> GetLocations()
         {
@@ -43,7 +52,7 @@ namespace SpotiFind.BusinessLogic
 
             return locations;
         }
-
+        
         public Location GetLocationById(int id)
         {
             var select = db.Locations.FirstOrDefault(l => l.Id == id);
@@ -97,5 +106,50 @@ namespace SpotiFind.BusinessLogic
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return epoch.AddSeconds(unixTime);
         }
+
+        public FullPlaylist GetPlaylistById(int id)
+        {
+            Location l = GetLocationById(id);
+            var playlistId = l.PlaylistId;
+
+            if (_spotify == null)
+            {
+                ImplicitGrantAuth();
+            }
+            
+            if (_spotify == null)
+            {
+                return null;
+            }
+
+            FullPlaylist playlist = _spotify.GetPlaylist(_userId, playlistId);
+            return playlist;
+        }
+
+        public async void ImplicitGrantAuth()
+        {
+            WebAPIFactory webApiFactory = new WebAPIFactory(
+            "http://localhost",
+            8888,
+            "e8fa55dbd4f74d68802fb6c67ab04105",
+            Scope.UserReadPrivate,
+            TimeSpan.FromSeconds(20)
+            );
+
+            try
+            {
+                //This will open the user's browser and returns once
+                //the user is authorized.
+                _spotify = await webApiFactory.GetWebApi();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+
+        }
+
+        
     }
 }
