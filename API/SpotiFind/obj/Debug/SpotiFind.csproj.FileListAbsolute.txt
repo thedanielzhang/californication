@@ -188,3 +188,4 @@ C:\repos\californication\API\SpotiFind\obj\Debug\SpotiFind.Migrations.initial.re
 C:\repos\californication\API\SpotiFind\obj\Debug\SpotiFind.csproj.GenerateResource.Cache
 C:\repos\californication\API\SpotiFind\bin\GoogleMapsApi.dll
 C:\repos\californication\API\SpotiFind\bin\GoogleMapsApi.xml
+C:\repos\californication\API\SpotiFind\obj\Debug\SpotiFind.Migrations.addrefreshtokentable.resources

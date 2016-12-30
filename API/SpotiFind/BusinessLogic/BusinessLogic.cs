@@ -114,7 +114,7 @@ namespace SpotiFind.BusinessLogic
 
             if (_spotify == null)
             {
-                ImplicitGrantAuth();
+                AuthorizationCodeAuthentication();
             }
             
             if (_spotify == null)
@@ -150,6 +150,30 @@ namespace SpotiFind.BusinessLogic
 
         }
 
-        
+        public static async void AuthorizationCodeAuthentication()
+        {
+            ApplicationAuthentication.WebAPIFactory webApiFactory = new ApplicationAuthentication.WebAPIFactory(
+            "http://localhost",
+            8888,
+            "e8fa55dbd4f74d68802fb6c67ab04105",
+            Scope.PlaylistModifyPrivate,
+            TimeSpan.FromSeconds(20)
+            );
+
+            try
+            {
+                //This will open the user's browser and returns once
+                //the user is authorized.
+                _spotify = await webApiFactory.GetWebApi();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+
+        }
+
+
     }
 }
