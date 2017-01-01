@@ -126,6 +126,12 @@ namespace SpotiFind.BusinessLogic
             return playlist;
         }
 
+        public SearchItem GetSongBySearch(string search)
+        {
+            SearchItem result = _spotify.SearchItems(search, SearchType.Track);
+            return result;
+        }
+
         public async void ImplicitGrantAuth()
         {
             WebAPIFactory webApiFactory = new WebAPIFactory(
