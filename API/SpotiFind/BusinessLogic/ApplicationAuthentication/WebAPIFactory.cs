@@ -23,7 +23,7 @@ namespace SpotiFind.BusinessLogic.ApplicationAuthentication
         private readonly string _clientSecret = "47448d979a7d42419cdbee8f7c2df8d4";
 
         private SpotiFindContext db = new SpotiFindContext();
-
+        public string refreshToken;
 
         public WebAPIFactory(string redirectUrl, int listeningPort, string clientId, Scope scope)
             : this(redirectUrl, listeningPort, clientId, scope, TimeSpan.FromSeconds(20))
@@ -60,10 +60,7 @@ namespace SpotiFind.BusinessLogic.ApplicationAuthentication
                 var token = authentication.ExchangeAuthCode(response.Code, _clientSecret);
                 spotifyWebApi = HandleSpotifyResponse(state, token);
 
-                db.RefreshTokens.AddOrUpdate(
-                    p => p.Id,
-                    new RefreshTokens() { RefreshToken = token.RefreshToken }
-                );
+                
 
                 authenticationWaitFlag.Set();
             };
@@ -94,6 +91,8 @@ namespace SpotiFind.BusinessLogic.ApplicationAuthentication
             if (token.Error != null)
                 throw new SpotifyWebApiException($"Error: {token.Error}");
 
+            refreshToken = token.RefreshToken;
+                
             var spotifyWebApi = new SpotifyWebAPI
             {
                 UseAuth = true,

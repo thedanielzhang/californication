@@ -18,6 +18,10 @@ using SpotifyAPI.Web.Auth; //All Authentication-related classes
 using SpotifyAPI.Web.Enums; //Enums
 using SpotifyAPI.Web.Models; //Models for the JSON-responses
 using System.Windows.Forms;
+using System.Text;
+using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Specialized;
 
 
 
@@ -25,12 +29,16 @@ namespace SpotiFind.BusinessLogic
 {
     public class BusinessLogic
     {
-        private static SpotifyWebAPI _spotify;
+        //private static SpotifyWebAPI _spotify;
 
         private string _apiKey = "AIzaSyBlBngVE6JZlHI649il6Lx3AKtiNolG2-Q";
 
         private SpotiFindContext db = new SpotiFindContext();
         private string _userId = "12133684664";
+        private static string _clientId = "e8fa55dbd4f74d68802fb6c67ab04105";
+        private static string _clientSecret = "47448d979a7d42419cdbee8f7c2df8d4";
+        private static string _refreshToken = "AQAxhwzbuLRQWdgVwuK3LmaKfOGUiAGVDLJhWDqNWMAubcY_wvrQwSKCew6ZhUtm4r2ug8uKWFLckroTjELJkTely_Ck_W2BovjhvEmfkDqRVgpMPrMhD4YDNNhX1agxP_U";
+        private static string _state = "XSS";
 
         public List<Location> GetLocations()
         {
@@ -107,38 +115,56 @@ namespace SpotiFind.BusinessLogic
             return epoch.AddSeconds(unixTime);
         }
 
-        public FullPlaylist GetPlaylistById(int id)
+        public FullPlaylist GetPlaylistById(int id, string accessToken)
         {
             Location l = GetLocationById(id);
             var playlistId = l.PlaylistId;
 
-            if (_spotify == null)
-            {
-                AuthorizationCodeAuthentication();
-            }
+            SpotifyWebAPI _spotify = GetSpotifyResponseWithAccessToken(accessToken);
             
-            if (_spotify == null)
-            {
-                return null;
-            }
-
             FullPlaylist playlist = _spotify.GetPlaylist(_userId, playlistId);
             return playlist;
         }
 
-        public SearchItem GetSongBySearch(string search)
+        public SearchItem GetSongBySearch(string search, string accessToken)
         {
+            SpotifyWebAPI _spotify = GetSpotifyResponseWithAccessToken(accessToken);
             SearchItem result = _spotify.SearchItems(search, SearchType.Track);
             return result;
         }
 
-        public async void ImplicitGrantAuth()
+        //public async void ImplicitGrantAuth()
+        //{
+        //    WebAPIFactory webApiFactory = new WebAPIFactory(
+        //    "http://localhost",
+        //    8888,
+        //    "e8fa55dbd4f74d68802fb6c67ab04105",
+        //    Scope.UserReadPrivate,
+        //    TimeSpan.FromSeconds(20)
+        //    );
+
+        //    try
+        //    {
+        //        //This will open the user's browser and returns once
+        //        //the user is authorized.
+        //        _spotify = await webApiFactory.GetWebApi();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+
+
+        //}
+
+        public async void AuthorizationCodeAuthentication()
         {
-            WebAPIFactory webApiFactory = new WebAPIFactory(
+            SpotifyWebAPI _spotify;
+            ApplicationAuthentication.WebAPIFactory webApiFactory = new ApplicationAuthentication.WebAPIFactory(
             "http://localhost",
             8888,
             "e8fa55dbd4f74d68802fb6c67ab04105",
-            Scope.UserReadPrivate,
+            Scope.PlaylistModifyPrivate | Scope.UserReadPrivate,
             TimeSpan.FromSeconds(20)
             );
 
@@ -147,6 +173,9 @@ namespace SpotiFind.BusinessLogic
                 //This will open the user's browser and returns once
                 //the user is authorized.
                 _spotify = await webApiFactory.GetWebApi();
+                _refreshToken = webApiFactory.refreshToken;
+                
+                
             }
             catch (Exception ex)
             {
@@ -156,28 +185,71 @@ namespace SpotiFind.BusinessLogic
 
         }
 
-        public static async void AuthorizationCodeAuthentication()
+        public SpotifyWebAPI GetSpotifyResponseExplicitly(string state, Token token)
         {
-            ApplicationAuthentication.WebAPIFactory webApiFactory = new ApplicationAuthentication.WebAPIFactory(
-            "http://localhost",
-            8888,
-            "e8fa55dbd4f74d68802fb6c67ab04105",
-            Scope.PlaylistModifyPrivate,
-            TimeSpan.FromSeconds(20)
-            );
+            if (state != "XSS")
+                throw new SpotifyWebApiException($"Wrong state '{state}' received.");
 
-            try
+            if (token.Error != null)
+                throw new SpotifyWebApiException($"Error: {token.Error}");
+
+            var spotifyWebApi = new SpotifyWebAPI
             {
-                //This will open the user's browser and returns once
-                //the user is authorized.
-                _spotify = await webApiFactory.GetWebApi();
-            }
-            catch (Exception ex)
+                UseAuth = true,
+                AccessToken = token.AccessToken,
+                TokenType = token.TokenType
+            };
+
+            return spotifyWebApi;
+        }
+
+        public SpotifyWebAPI GetSpotifyResponseWithAccessToken(string accessToken)
+        {
+            var spotifyWebApi = new SpotifyWebAPI
             {
-                MessageBox.Show(ex.Message);
+                UseAuth = true,
+                AccessToken = accessToken,
+                TokenType = "Bearer"
+            };
+
+            return spotifyWebApi;
+        }
+
+        public string GetAccessToken()
+        {
+            Token token = RefreshToken(_refreshToken, _clientSecret);
+            string accessToken = token.AccessToken;
+            return accessToken;
+        }
+
+        public Token RefreshToken(string refreshToken, string clientSecret)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.Proxy = null;
+                wc.Headers.Add("Authorization",
+                    "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(_clientId + ":" + clientSecret)));
+                NameValueCollection col = new NameValueCollection
+                {
+                    {"grant_type", "refresh_token"},
+                    {"refresh_token", refreshToken}
+                };
+
+                string response;
+                try
+                {
+                    byte[] data = wc.UploadValues("https://accounts.spotify.com/api/token", "POST", col);
+                    response = Encoding.UTF8.GetString(data);
+                }
+                catch (WebException e)
+                {
+                    using (StreamReader reader = new StreamReader(e.Response.GetResponseStream()))
+                    {
+                        response = reader.ReadToEnd();
+                    }
+                }
+                return JsonConvert.DeserializeObject<Token>(response);
             }
-
-
         }
 
 
