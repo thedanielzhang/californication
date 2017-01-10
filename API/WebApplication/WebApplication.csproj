@@ -94,6 +94,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\main.css" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config" />
     <Content Include="Scripts\angular.min.js.map" />
@@ -107,7 +108,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="demo.js" />
+    <Content Include="app.js" />
     <Content Include="index.html" />
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular.js" />
@@ -117,8 +118,8 @@
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
-    <Content Include="select.css" />
-    <Content Include="select.js" />
+    <Content Include="css\select.css" />
+    <Content Include="Scripts\select.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

@@ -250,6 +250,7 @@
     <Compile Include="BusinessLogic\ApplicationAuthentication\WebAPIFactory.cs" />
     <Compile Include="BusinessLogic\BusinessLogic.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="ExtensionMethods\CustomExtensions.cs" />
