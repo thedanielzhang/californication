@@ -17,17 +17,7 @@ function authenticationAjax(callback) {
         success: callback
     });
 }
-/*
-function ajaxHelper(uri, method, data) {
-    return $.ajax({
-        type: method,
-        url: uri,
-        dataType: 'json',
-        contentType: 'application/json',
-        data: data ? JSON.stringify(data) : null
-    });
-}
-*/
+
 function addMultipleMarkers(result) {
     //console.log(result);
     for (i = 0; i < result.length; i++) {
@@ -229,21 +219,10 @@ $(document).ready(function () {
     });
     var selectize = $select[0].selectize;
 
-    /*
-    var selected_objects = $.map(selectize.items, function (value) {
-        //console.log(selectize.options[value]);
-        return selectize.options[value];
-    });
-    */
 
     
 
     $('select.selectized,input.selectized').each(function () {
-        /*
-        var $container = $('<div>').addClass('value').html('Current Value: ');
-        var $value = $('<span>').appendTo($container);
-        var $input = $(this);
-        */
 
         var update = function (e) {
             var trackId = selectize.items
@@ -264,9 +243,7 @@ $(document).ready(function () {
                 }
             });
 
-            //var trackJson = $.get(trackUri);
-            //console.log(trackJson);
-            //console.log(selectize.items);
+
             
         }
 
@@ -275,7 +252,7 @@ $(document).ready(function () {
         $(this).on('change', update);
         update();
 
-        //$container.insertAfter($input.next());
+
     });
 
     $('#submit-track').click(function () {
@@ -290,76 +267,10 @@ $(document).ready(function () {
             }
         });
         console.log(response);
+        $("#spotify-player-goes-after").hide().fadeIn('fast');
+
     });
 
-
-    /*
-    $('.spotify-api-data').select2({
-        ajax: {
-            url: "https://api.spotify.com/v1/search",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                return {
-                    q: params.term, // search term
-                    page: params.page,
-                    type: 'track'
-                };
-            },
-            processResults: function (data, page) {
-                //data = { results:[{ItemId:1,ItemText:"a"},{ItemId:2,ItemText:"b"}] };
-                
-                var array = data.tracks.items;
-                //console.log(array);
-                var i = 0;
-                while(i < array.length){
-                    
-                    array[i]['text'] = array[i]['name'];
-                    //delete array[i]['id'];
-                    delete array[i]["name"];
-                    i++;
-                }
-                return { results: array };
-            }
-        },
-            
-            processResults: function (data, params) {
-                // parse the results into the format expected by Select2
-                // since we are using custom formatting functions we do not need to
-                // alter the remote JSON data, except to indicate that infinite
-                // scrolling can be used
-                params.page = params.page || 1;
-                //parsedJason = JSON.parse(data);
-                dataItems = data.tracks.items;
-
-
-                return {
-                    results: 
-                        $.map(dataItems, function (item) {
-                            return {
-                                id: item.id,
-                                text: item.name,
-                                data: item
-                            };
-                        }),
-                    
-                    pagination: {
-                        more: (params.page * 30) < data.total
-                    }
-                };
-            },
-            cache: true
-        },
-        
-
-        
-        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-        minimumInputLength: 1,
-        templateResult: formatTrack, // omitted for brevity, see the source of this page
-        templateSelection: formatTrackSelection // omitted for brevity, see the source of this page
-    });
-
-    */
 
 
     redrawDotNav();
@@ -414,39 +325,7 @@ $(document).ready(function () {
 		}
     );
 
-    /*
-    var basicLocations = [];
-    console.log(dataStore(locationsUri).getJson());
-    basicLocations = dataStore(locationsUri).getJson();
-    console.log(basicLocations.length);
-    */
-
-
-    /*
-    for (var b in $(dataStore(locationsUri).getJson())) {
-        basicLocations.push({
-            Id: b.Id,
-            PlaceId: b.Place,
-            PlaylistId: b.PlaylistId
-        });
-    }
-    */
-
-    //alert(basicLocations);
-    /*
-    navigator.geolocation.getCurrentPosition(function (location) {
-        
-        myLatitude = location.coords.latitude;
-        myLongitude = location.coords.longitude;
-
-        console.log(myLatitude);
-        console.log(myLongitude);
-        //console.log(location.coords.accuracy);
-    });
-    */
-
-    
-
+   
     GMaps.geolocate({
         success: function (position) {
             map = new GMaps({
@@ -480,19 +359,9 @@ $(document).ready(function () {
         }
     });
 
-    /*
-    $("#map").googleMap({
-        zoom: 10, // Initial zoom level (optional)
-        //coords: [48.895651, 2.290569], // Map center (optional)
-        type: "ROADMAP" // Map type (optional)
-    });
-    */
+
 
     ajaxHelper(locationsUri, addMultipleMarkers);
-
-
-
-
 
 
 });
