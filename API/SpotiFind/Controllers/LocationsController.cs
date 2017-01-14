@@ -107,25 +107,16 @@ namespace SpotiFind.Controllers
         }
 
         // POST: api/Locations
-        [ResponseType(typeof(Location))]
-        public async Task<IHttpActionResult> PostLocation(Location location)
+        [HttpPost]
+        public string PostTrack([FromBody]SubmissionDTO submission)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            db.Locations.Add(location);
-            await db.SaveChangesAsync();
+            var locationId = submission.LocationId;
+            var trackId = submission.TrackId;
+            var accessToken = submission.AccessToken;
 
-            var dto = new LocationDTO()
-            {
-                Id = location.Id,
-                Place = location.PlaceId,
-                PlaylistId = location.PlaylistId
-            };
-
-            return CreatedAtRoute("DefaultApi", new { id = location.Id }, dto);
+            var error = businessLogic.PostTrackToLocation(locationId, trackId, accessToken);
+            return error;
         }
 
         // DELETE: api/Locations/5

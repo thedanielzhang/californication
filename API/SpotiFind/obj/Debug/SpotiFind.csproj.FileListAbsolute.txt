@@ -189,3 +189,6 @@ C:\repos\californication\API\SpotiFind\obj\Debug\SpotiFind.csproj.GenerateResour
 C:\repos\californication\API\SpotiFind\bin\GoogleMapsApi.dll
 C:\repos\californication\API\SpotiFind\bin\GoogleMapsApi.xml
 C:\repos\californication\API\SpotiFind\obj\Debug\SpotiFind.Migrations.addrefreshtokentable.resources
+C:\repos\californication\API\SpotiFind\bin\System.Web.Cors.dll
+C:\repos\californication\API\SpotiFind\bin\System.Web.Http.Cors.dll
+C:\repos\californication\API\SpotiFind\bin\System.Web.Http.Cors.xml

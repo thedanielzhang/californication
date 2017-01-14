@@ -34,7 +34,7 @@ namespace SpotiFind.BusinessLogic
         private string _apiKey = "AIzaSyBlBngVE6JZlHI649il6Lx3AKtiNolG2-Q";
 
         private SpotiFindContext db = new SpotiFindContext();
-        private string _userId = "12133684664";
+        private string _userId = "danielberkeley";
         private static string _clientId = "e8fa55dbd4f74d68802fb6c67ab04105";
         private static string _clientSecret = "47448d979a7d42419cdbee8f7c2df8d4";
         private static string _refreshToken = "AQAxhwzbuLRQWdgVwuK3LmaKfOGUiAGVDLJhWDqNWMAubcY_wvrQwSKCew6ZhUtm4r2ug8uKWFLckroTjELJkTely_Ck_W2BovjhvEmfkDqRVgpMPrMhD4YDNNhX1agxP_U";
@@ -131,6 +131,30 @@ namespace SpotiFind.BusinessLogic
             SpotifyWebAPI _spotify = GetSpotifyResponseWithAccessToken(accessToken);
             SearchItem result = _spotify.SearchItems(search, SearchType.Track);
             return result;
+        }
+
+        public string PostTrackToLocation(string locationId, string trackId, string accessToken)
+        {
+            SpotifyWebAPI _spotify = GetSpotifyResponseWithAccessToken(accessToken);
+            var select = db.Locations.FirstOrDefault(l => l.PlaceId == locationId);
+            var uri = "spotify:track:" + trackId;
+            if (select != null)
+            {
+                var playlistId = select.PlaylistId;
+                ErrorResponse response = _spotify.AddPlaylistTrack(_userId, playlistId, uri);
+                if (!response.HasError())
+                {
+                    return "Success";
+                }
+                else
+                {
+                    return response.Error.Message;
+                }
+            }
+            else
+            {
+                return "Location not found";
+            }
         }
 
         //public async void ImplicitGrantAuth()
