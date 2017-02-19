@@ -10,10 +10,11 @@
 .divider {
 	width: 740px;
 	margin-bottom: 20px;
+    border-color: #4CAF50;
 }
 
 #navigation {
-    background:  #ccccb3;
+    background:  #4CAF50;
     text-align: right;
     text-decoration: none;
     display: block;
@@ -41,6 +42,18 @@ a {
     text-decoration: none;
 }
 
+.selectize-input, .single.selectize-control .focus.selectize-input
+  {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      padding-right: 4px;
+      padding-left: 6px;
+      font-size: 0.82em;
+      background-color: #eeeeee;
+      margin-top: 2px;
+      margin-bottom: 2px;
+  }
+
 #header2 {
     margin-top: 0px;
 	font-size: 36px;
@@ -51,12 +64,14 @@ a {
 #map-overlay {
     
 }
-#explore {
-    opacity: 0.5;
+.container {
+    z-index: 1;
+    opacity: 0.50;
     transition: opacity .5s ease-out;
+
 }
 
-#explore:hover {
+.container:hover {
     opacity: 1;
 }
 
@@ -64,32 +79,120 @@ ul {
     list-style-type: none;
 }
 
-.overlay {
-    transition: opacity .5s ease-out;
-    z-index: 1;
-    height: 460px;
-    width: 730px;
-    position: absolute;
-    background: rgba(0, 0, 0, 0.8); /*can be anything, of course*/
+
+
+.selected-options {
+    padding: 5px;
+}
+
+.selected-image {
+    float: left;
+    margin: 0px;
+}
+
+.selected-item {
+    float: left;
+    font-size: 12px;
+    text-align: left;
+    font-family: Lato;
+    color: gray;
+    text-transform: uppercase;
+    padding-left: 2px;
+    margin: 0px;
     
 }
 
-.overlay-text {
-    transition: opacity .5s ease-out;
-    font-size: 46px;
+.selected-album-image {
+    width: 75px;
+    height: auto;
+}
+
+.selected-item:hover {
+    color: white;
+}
+
+
+#submit-track {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 8px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-family: Lato;
+}
+
+
+.selecected-title {
+    
+}
+
+#label-for-select {
+    margin-top: 0px;
+	font-size: 36px;
+	text-align: center;
 	font-family: Lato;
-	color: white;
-    position: absolute;
-    z-index: 2;
+	color: gray;
 }
 
-.overlay-text:hover {
-    opacity: 0;
+.left {
+    float: left;
+    width: 365px;
+    padding: 5px;
+    vertical-align: middle;
 }
 
-.overlay:hover {
-    opacity: 0;
+#search-bar {
+    width: 600px;
+    margin: auto;
+    padding-top: 130px;
 }
+
+#current-location-name {
+    text-transform: uppercase;
+    margin-top: 0px;
+	font-size: 36px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+}
+
+.contact-logo {
+    width: 25px;
+    height: auto;
+    padding-top: 0px;
+}
+
+#contact-name {
+    padding-top: 75px;
+    margin-top: 0px;
+	font-size: 48px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+}
+
+.contact-info {
+    margin-top: 0px;
+	font-size: 12px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+
+}
+
+#contact-photo {
+   
+    width: 150px;
+    margin: 20px auto;
+    height: auto;
+}
+
+
+
+
 
 
 

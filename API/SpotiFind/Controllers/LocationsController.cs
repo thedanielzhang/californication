@@ -60,6 +60,36 @@ namespace SpotiFind.Controllers
             return locations;
         }
 
+        public async Task<IHttpActionResult> GetLocation(float lat, float lon, string accessToken)
+        {
+            var l = businessLogic.GetClosestLocation(lat, lon);
+            int id = l.Id;
+            var place = businessLogic.GetPlaceById(id);
+            var playlist = businessLogic.GetPlaylistById(id, accessToken);
+
+            if (l == null)
+            {
+                return NotFound();
+            }
+
+            var locationDetail = new LocationDetailDTO
+
+            {
+                Id = l.Id,
+                PlaylistId = l.PlaylistId,
+                PlaylistName = playlist.Name,
+
+                PlaceId = l.PlaceId,
+                PlaceName = place.Name,
+                PlaceAddress = place.Address,
+
+                PlaceLatitude = place.Latitude,
+                PlaceLongitude = place.Longitude
+            };
+
+            return Ok(locationDetail);
+        }
+
         // GET: api/Locations/5
         [ResponseType(typeof(LocationDetailDTO))]
         public async Task<IHttpActionResult> GetLocation(int id, string accessToken)
