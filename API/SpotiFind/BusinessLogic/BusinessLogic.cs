@@ -22,6 +22,7 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using System.Collections.Specialized;
+using System.Data.SqlClient;
 
 
 
@@ -39,6 +40,8 @@ namespace SpotiFind.BusinessLogic
         private static string _clientSecret = "47448d979a7d42419cdbee8f7c2df8d4";
         private static string _refreshToken = "AQAxhwzbuLRQWdgVwuK3LmaKfOGUiAGVDLJhWDqNWMAubcY_wvrQwSKCew6ZhUtm4r2ug8uKWFLckroTjELJkTely_Ck_W2BovjhvEmfkDqRVgpMPrMhD4YDNNhX1agxP_U";
         private static string _state = "XSS";
+
+        private static string _connectionString = @"Data Source=SEAOTTER\SQLEXPRESS;Initial Catalog=dbspotifind;User ID=ug;Password=ug";
 
         public List<Location> GetLocations()
         {
@@ -83,6 +86,106 @@ namespace SpotiFind.BusinessLogic
             
         }
 
+        public List<Location> GetLocationByLatLong(float lat, float lon)
+        {
+            string sql = "SELECT * FROM[dbspotifind].[dbo].[GeoNames] WHERE ABS(latitude - " + lat + ") < (0.00005) AND ABS(longitude - " + lon + ") < (0.00005)";
+            var list = QueryDB(sql);
+            
+            List<Location> locationList = new List<Location>();
+            foreach (Place place in list)
+            {
+                var select = db.Locations.FirstOrDefault(l => l.PlaceId == place.Id);
+
+                if (select != null)
+                {
+                    var location = new Location
+                    {
+                        Id = select.Id,
+                        PlaceId = select.PlaceId,
+                        PlaylistId = select.PlaylistId
+                    };
+
+                    locationList.Add(location);
+                }
+                else
+                {
+                    
+                }
+
+
+            }
+
+            return locationList;
+
+
+
+
+
+        }
+
+        public List<Place> QueryDB(string sqlString)
+        {
+            List <Place> list = new List<Place>();
+            string connectionString = _connectionString;
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+            string sql = sqlString;
+            connection = new SqlConnection(connectionString);
+            string temp_latitude = null;
+            string temp_longitude = null;
+            float latitude = 0;
+            float longitude = 0;
+            string name = null;
+            string address = null;
+            string id = null;
+            try
+            {
+                connection.Open();
+                command = new SqlCommand(sql, connection);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Console.WriteLine(dataReader.GetValue(0) + " - " + dataReader.GetValue(1) + " - " + dataReader.GetValue(2));
+
+                    id = dataReader.GetValue(0).ToString();
+
+                    name = dataReader.GetValue(1).ToString();
+                    temp_latitude = dataReader.GetValue(4).ToString();
+                    temp_longitude = dataReader.GetValue(5).ToString();
+
+                    latitude = float.Parse(temp_latitude);
+                    longitude = float.Parse(temp_longitude);
+
+                    var place = new Place
+                    {
+                        Id = id,
+                        
+                        Name = name,
+                        Address = address,
+
+                        Latitude = latitude,
+                        Longitude = longitude
+                    };
+
+                    list.Add(place);
+
+
+                }
+                dataReader.Close();
+                command.Dispose();
+                connection.Close();
+
+            }
+            catch (Exception ex)
+            {
+                Console.Write("Can't open connection!");
+            }
+            
+
+            return list;
+        }
+
         public Place GetPlaceById(int id)
         {
             string apiKey = _apiKey; // Your api key
@@ -90,23 +193,12 @@ namespace SpotiFind.BusinessLogic
             Location l = GetLocationById(id);
             var placeId = l.PlaceId;
 
-            string url = string.Format(@"https://maps.googleapis.com/maps/api/place/details/json?placeid={0}&key={1}", placeId, apiKey);
-            var json = new WebClient().DownloadString(url);
-            
-            JavaScriptSerializer oJS = new JavaScriptSerializer();
-            SpotiFind.Models.APIModels.RootObject oRootObject = new SpotiFind.Models.APIModels.RootObject();
-            oRootObject = oJS.Deserialize<SpotiFind.Models.APIModels.RootObject>(json);
+            string sql = "SELECT * FROM[dbspotifind].[dbo].[GeoNames] WHERE geonameId = " + placeId;
 
-            var place = new Place
-            {
-                Name = oRootObject.result.name,
-                Address = oRootObject.result.formatted_address,
 
-                Latitude = oRootObject.result.geometry.location.lat,
-                Longitude = oRootObject.result.geometry.location.lng
-            };
+            var list = QueryDB(sql);
 
-            return place;
+            return list[0];
         }
 
         public DateTime FromUnixTime(long unixTime)

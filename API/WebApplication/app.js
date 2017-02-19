@@ -19,9 +19,9 @@ function authenticationAjax(callback) {
 }
 
 function addMultipleMarkers(result) {
-    //console.log(result);
+    console.log(result);
     for (i = 0; i < result.length; i++) {
-        //console.log(result[i].Id);
+        console.log(result[i].Id);
         ajaxHelper(locationsUri + '?id=' + result[i].Id + '&accessToken=' + authenticationString, addMarker);
     }
 }
@@ -46,6 +46,7 @@ function addMarker(result) {
 
 function ajaxHelper(uri, callback) {
     //var json = [];
+    console.log(uri);
 
     $.ajax({
         type: "GET",
@@ -94,7 +95,7 @@ function dataStore(uri) {
 }
 
 function getAllLocations() {
-    ajaxHelper(locationsUri, 'GET').done(function (data) {
+    ajaxHelper(locationsUri + '?lat=' + myLatitude + '&lon=' + myLongitude, 'GET').done(function (data) {
         self.locations(data);
     });
 }
@@ -118,38 +119,24 @@ function formatTrackSelection(track, container) {
     return track.name || track.text;
 }
 
-/* Scroll the background layers */
-function parallaxScroll() {
-    var scrolled = $(window).scrollTop();
-    $('#parallax-bg1').css('top', (0 - (scrolled * .25)) + 'px');
-    $('#parallax-bg2').css('top', (0 - (scrolled * .5)) + 'px');
-    $('#parallax-bg3').css('top', (0 - (scrolled * .75)) + 'px');
-}
 
-/* Set navigation dots to an active state as the user scrolls */
-function redrawDotNav() {
-    var section1Top = 0;
-    // The top of each section is offset by half the distance to the previous section.
-    var section2Top = $('#frameless-parachute').offset().top - (($('#english-channel').offset().top - $('#frameless-parachute').offset().top) / 2);
-    var section3Top = $('#english-channel').offset().top - (($('#about').offset().top - $('#english-channel').offset().top) / 2);
-    var section4Top = $('#about').offset().top - (($(document).height() - $('#about').offset().top) / 2);;
-    $('nav#primary a').removeClass('active');
-    if ($(document).scrollTop() >= section1Top && $(document).scrollTop() < section2Top) {
-        $('nav#primary a.manned-flight').addClass('active');
-    } else if ($(document).scrollTop() >= section2Top && $(document).scrollTop() < section3Top) {
-        $('nav#primary a.frameless-parachute').addClass('active');
-    } else if ($(document).scrollTop() >= section3Top && $(document).scrollTop() < section4Top) {
-        $('nav#primary a.english-channel').addClass('active');
-    } else if ($(document).scrollTop() >= section4Top) {
-        $('nav#primary a.about').addClass('active');
-    }
-
-}
 
 
 
 $(document).ready(function () {
-
+    $('a[href*="#"]:not([href="#"])').click(function () {
+        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+            if (target.length) {
+                console.log(target);
+                $('html, body').animate({
+                    scrollTop: target.offset().top - 85
+                }, 1000);
+                return false;
+            }
+        }
+    });
 
     $.ajax({
         type: "GET",
@@ -233,7 +220,9 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (jsonData) {
                     console.log(jsonData);
-                    $('#display-data').prepend('<img id="theImg" src="' + jsonData.album.images[1].url + '"/>');
+                    //console.log()
+                    $('#song-img').attr("src", jsonData.album.images[1].url);
+                    $('#display-data').prepend('<img id="theImg" src="' +  + '"/>');
                     $('#track-name').text("Track name: " + jsonData.name);
                     $('#track-album').text("Track album: " + jsonData.album.name);
                     $('#track-artist').text("Track artist: " + jsonData.artists[0].name);
@@ -270,67 +259,14 @@ $(document).ready(function () {
         $("#spotify-player-goes-after").hide().fadeIn('fast');
 
     });
-
-
-
-    redrawDotNav();
-
-    /* Scroll event handler */
-    $(window).bind('scroll', function (e) {
-        parallaxScroll();
-        redrawDotNav();
-    });
-
-    /* Next/prev and primary nav btn click handlers */
-    $('a.manned-flight').click(function () {
-        $('html, body').animate({
-            scrollTop: 0
-        }, 1000, function () {
-            parallaxScroll(); // Callback is required for iOS
-        });
-        return false;
-    });
-    $('a.frameless-parachute').click(function () {
-        $('html, body').animate({
-            scrollTop: $('#frameless-parachute').offset().top
-        }, 1000, function () {
-            parallaxScroll(); // Callback is required for iOS
-        });
-        return false;
-    });
-    $('a.english-channel').click(function () {
-        $('html, body').animate({
-            scrollTop: $('#english-channel').offset().top
-        }, 1000, function () {
-            parallaxScroll(); // Callback is required for iOS
-        });
-        return false;
-    });
-    $('a.about').click(function () {
-        $('html, body').animate({
-            scrollTop: $('#about').offset().top
-        }, 1000, function () {
-            parallaxScroll(); // Callback is required for iOS
-        });
-        return false;
-    });
-
-    /* Show/hide dot lav labels on hover */
-    $('nav#primary a').hover(
-    	function () {
-    	    $(this).prev('h1').show();
-    	},
-		function () {
-		    $(this).prev('h1').hide();
-		}
-    );
-
    
     GMaps.geolocate({
         success: function (position) {
+            myLatitude = position.coords.latitude;
+            myLongitude - position.coords.longitude;
             map = new GMaps({
                 div: '#map',
-                zoom: 12,
+                zoom: 17,
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             });
@@ -339,7 +275,7 @@ $(document).ready(function () {
         error: function (error) {
             map = new GMaps({
                 div: '#map',
-                zoom: 50,
+                zoom: 25,
                 lat: 37.870584,
                 lng: -122.260577
             });
@@ -348,7 +284,7 @@ $(document).ready(function () {
         not_supported: function () {
             map = new GMaps({
                 div: '#map',
-                zoom: 50,
+                zoom: 25,
                 lat: 37.870584,
                 lng: -122.260577
             });
@@ -359,10 +295,24 @@ $(document).ready(function () {
         }
     });
 
-
-
-    ajaxHelper(locationsUri, addMultipleMarkers);
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+    } else {
+        alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser which supports it.');
+    }
+    //console.log(myLatitude);
+    
 
 
 });
 
+function successFunction(position) {
+    myLatitude = position.coords.latitude;
+    myLongitude = position.coords.longitude;
+    console.log('Your latitude is :' + myLatitude + ' and longitude is ' + myLongitude);
+    ajaxHelper(locationsUri + '?lat=' + myLatitude + '&lon=' + myLongitude, addMultipleMarkers);
+}
+
+function errorFunction() {
+    Console.log("error");
+}

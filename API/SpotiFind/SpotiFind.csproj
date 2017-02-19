@@ -261,6 +261,7 @@
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationsController.cs" />
+    <Compile Include="DatabaseSeeding\BerkeleyInit.cs" />
     <Compile Include="ExtensionMethods\CustomExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -272,6 +273,14 @@
     <Compile Include="Migrations\201612300329422_add-refresh-token-table.cs" />
     <Compile Include="Migrations\201612300329422_add-refresh-token-table.Designer.cs">
       <DependentUpon>201612300329422_add-refresh-token-table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702180854308_seeding.cs" />
+    <Compile Include="Migrations\201702180854308_seeding.Designer.cs">
+      <DependentUpon>201702180854308_seeding.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702181450525_updating.cs" />
+    <Compile Include="Migrations\201702181450525_updating.Designer.cs">
+      <DependentUpon>201702181450525_updating.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -424,6 +433,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612300329422_add-refresh-token-table.resx">
       <DependentUpon>201612300329422_add-refresh-token-table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702180854308_seeding.resx">
+      <DependentUpon>201702180854308_seeding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702181450525_updating.resx">
+      <DependentUpon>201702181450525_updating.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
