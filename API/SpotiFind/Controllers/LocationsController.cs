@@ -40,6 +40,26 @@ namespace SpotiFind.Controllers
             return locations;
         }
 
+        public List<LocationDTO> GetLocations(float lat, float lon)
+        {
+            var locationsList = businessLogic.GetLocationByLatLong(lat, lon);
+
+            List<LocationDTO> locations = new List<LocationDTO>();
+
+            foreach (Location location in locationsList)
+            {
+                locations.Add(new LocationDTO
+                {
+                    Id = location.Id,
+                    Place = location.PlaceId,
+                    PlaylistId = location.PlaylistId
+                });
+            }
+
+
+            return locations;
+        }
+
         // GET: api/Locations/5
         [ResponseType(typeof(LocationDetailDTO))]
         public async Task<IHttpActionResult> GetLocation(int id, string accessToken)

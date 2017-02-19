@@ -192,3 +192,5 @@ C:\repos\californication\API\SpotiFind\obj\Debug\SpotiFind.Migrations.addrefresh
 C:\repos\californication\API\SpotiFind\bin\System.Web.Cors.dll
 C:\repos\californication\API\SpotiFind\bin\System.Web.Http.Cors.dll
 C:\repos\californication\API\SpotiFind\bin\System.Web.Http.Cors.xml
+C:\repos\californication\API\SpotiFind\obj\Debug\SpotiFind.Migrations.seeding.resources
+C:\repos\californication\API\SpotiFind\obj\Debug\SpotiFind.Migrations.updating.resources
