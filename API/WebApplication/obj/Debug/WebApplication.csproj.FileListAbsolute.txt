@@ -13,14 +13,6 @@ C:\repos\californication\API\WebApplication\bin\roslyn\VBCSCompiler.exe.config
 C:\repos\californication\API\WebApplication\bin\WebApplication.dll.config
 C:\repos\californication\API\WebApplication\bin\WebApplication.dll
 C:\repos\californication\API\WebApplication\bin\WebApplication.pdb
-C:\repos\californication\API\WebApplication\bin\Microsoft.AI.Agent.Intercept.dll
-C:\repos\californication\API\WebApplication\bin\Microsoft.AI.DependencyCollector.dll
-C:\repos\californication\API\WebApplication\bin\Microsoft.AI.PerfCounterCollector.dll
-C:\repos\californication\API\WebApplication\bin\Microsoft.AI.ServerTelemetryChannel.dll
-C:\repos\californication\API\WebApplication\bin\Microsoft.AI.Web.dll
-C:\repos\californication\API\WebApplication\bin\Microsoft.AI.WindowsServer.dll
-C:\repos\californication\API\WebApplication\bin\Microsoft.ApplicationInsights.dll
-C:\repos\californication\API\WebApplication\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 C:\repos\californication\API\WebApplication\bin\Microsoft.AI.DependencyCollector.xml
 C:\repos\californication\API\WebApplication\bin\Microsoft.AI.ServerTelemetryChannel.xml
 C:\repos\californication\API\WebApplication\bin\Microsoft.AI.Web.xml

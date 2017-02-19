@@ -1,10 +1,13 @@
-﻿$.fn.select2.defaults.set('debug', true);
+﻿
 var locationsUri = 'http://localhost:61215/api/locations';
 var authenticationUri = 'http://localhost:61215/api/authentication';
 var authenticationString;
 var map;
 var myLatitude;
 var myLongitude;
+
+
+var currentLocation;
 
 function basicCallback(result) {
     return result;
@@ -20,23 +23,25 @@ function authenticationAjax(callback) {
 
 function addMultipleMarkers(result) {
     console.log(result);
-    for (i = 0; i < result.length; i++) {
-        console.log(result[i].Id);
+    
+    for (i = 0; i < result.length; i++) {   
         ajaxHelper(locationsUri + '?id=' + result[i].Id + '&accessToken=' + authenticationString, addMarker);
     }
+    
 }
 
 function addMarker(result) {
     //console.log(result);
     //console.log(result.PlaceLatitude);
+    
     map.addMarker({
         lat: result.PlaceLatitude, 
         lng: result.PlaceLongitude, // GPS coords
         //url: 'http://www.tiloweb.com', // Link to redirect onclick (optional)
         title: 'marker' + result.PlaylistId,
         click: function (e) {
-            console.log(result.PlaylistId);
-            $("#custom-spotify-player").attr("src", "https://embed.spotify.com/?uri=spotify:user:danielberkeley:playlist:" + result.PlaylistId);
+            
+            $("#custom-spotify-player").attr("src", "https://embed.spotify.com/?uri=spotify:user:danielberkeley:playlist:" + result.PlaylistId + "&theme=white");
         },
         infoWindow: {
             content: '<div class=' + 'customMarker id=' + result.PlaylistId + '>' + result.PlaceName + '</div>'
@@ -46,7 +51,7 @@ function addMarker(result) {
 
 function ajaxHelper(uri, callback) {
     //var json = [];
-    console.log(uri);
+    
 
     $.ajax({
         type: "GET",
@@ -100,29 +105,6 @@ function getAllLocations() {
     });
 }
 
-function formatTrack(track) {
-    if (track.loading) return track.text;
-
-    //var markup = "<i>" + track.id + "</i>";
-    //console.log(track);
-    var markup = "<div class='select2-result-track clearfix'>" +
-        "<div class='select2-result-track_image'><img src='" + track.album.images[2].url + "' /></div>" +
-        "<div class='select2-result-track_meta'>" +
-        "<div class='select2-result-track_name'>" + track.text + "</div>" +
-        "<div class='select2-result-track_meta'>" +
-        "<div class='select2-result-track_artist'>" + track.album.artists[0].name + "</div>";
-    return markup;
-}
-
-function formatTrackSelection(track, container) {
-    console.log(track.id);
-    return track.name || track.text;
-}
-
-
-
-
-
 $(document).ready(function () {
     $('a[href*="#"]:not([href="#"])').click(function () {
         if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
@@ -146,6 +128,12 @@ $(document).ready(function () {
             authenticationString = text;
         }
     });
+
+
+
+   
+
+    
     
     
     var $select = $('#select-track').selectize({
@@ -157,28 +145,15 @@ $(document).ready(function () {
         render: {
             option: function (item, escape) {
                 
-                return '<div>' +
-					'<img src="' + escape(item.album.images[2].url) + '" alt="">' +
-                /*
-                    '<span class="title">' +
-						'<span class="name">' + escape(item.name) + '</span>' +
-					'</span>' +
-					//'<span class="description">' + escape(item.synopsis || 'No synopsis available at this time.') + '</span>' +
-					'<span class="artists">' + escape(item.artists[0].name) + '</span>' +
-				'</div>';
-                */
-
-                //'<div>' +
-                    '<span class="title">' +
-                        '<span class="name">' + escape(item.name) + '</span>' +
-                        //'<span class="by">' + escape(item.username) + '</span>' +
-                    '</span>' +
-                    //'<span class="description">' + escape(item.description) + '</span>' +
-                    '<ul class="meta">' +
-                        //(item.language ? '<li class="language">' + escape(item.language) + '</li>' : '') +
-                        '<li class="watchers"><span>' + escape(item.artists[0].name) + 
-                        //'<li class="forks"><span>' + escape(item.forks) + '</span> forks</li>' +
-                    '</ul>' +
+                return '<div class="selected-stuff">' +
+                    '<div class="selected-options">' +
+                        '<div class="selected-image">' +
+					        '<img class="selected-album-image" src="' + escape(item.album.images[2].url) + '" alt="">' +
+                        '</div>' +
+                        '<div class="selected-item">' +
+                            '<p class="selected-title">' + escape(item.name) + '</p>' + '<p class="selected-artist">' + escape(item.artists[0].name) + '</p>' + 
+                        '</div>' +
+                    '</div>' +
                 '</div>';
                 
             }
@@ -250,25 +225,25 @@ $(document).ready(function () {
             url: locationsUri,
             dataType: "application/json",
             data:  {
-                LocationId: "ChIJC4xmE1LdMIgRyQsQaH9Aawk",
+                LocationId: currentLocation.PlaceId,
                 TrackId: selectize.items,
                 AccessToken: authenticationString
             }
         });
         console.log(response);
-        $("#spotify-player-goes-after").hide().fadeIn('fast');
+        $("#custom-spotify-player").attr("src", "https://embed.spotify.com/?uri=spotify:user:danielberkeley:playlist:" + currentLocation.PlaylistId + "&theme=white");
 
     });
    
     GMaps.geolocate({
         success: function (position) {
             myLatitude = position.coords.latitude;
-            myLongitude - position.coords.longitude;
+            myLongitude = position.coords.longitude;
             map = new GMaps({
                 div: '#map',
                 zoom: 17,
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
+                lat: myLatitude,
+                lng: myLongitude
             });
             //map.setCenter(, );
         },
@@ -301,18 +276,50 @@ $(document).ready(function () {
         alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser which supports it.');
     }
     //console.log(myLatitude);
+
+    
     
 
 
 });
 
 function successFunction(position) {
+    $.ajax({
+        type: "GET",
+        url: authenticationUri,
+        async: false,
+        success: function (text) {
+            authenticationString = text;
+            console.log(authenticationString);
+        }
+    });
     myLatitude = position.coords.latitude;
     myLongitude = position.coords.longitude;
+
     console.log('Your latitude is :' + myLatitude + ' and longitude is ' + myLongitude);
+    
     ajaxHelper(locationsUri + '?lat=' + myLatitude + '&lon=' + myLongitude, addMultipleMarkers);
+    
+    
+    
+    
+    $.ajax({
+        type: "GET",
+        url: locationsUri + '?lat=' + myLatitude + '&lon=' + myLongitude + '&accessToken=' + authenticationString,
+        async: false,
+        success: function (result) {
+            currentLocation = result;
+        }
+    });
+    
+    $("#custom-spotify-player").attr("src", "https://embed.spotify.com/?uri=spotify:user:danielberkeley:playlist:" + currentLocation.PlaylistId + "&theme=white");
+    console.log(currentLocation);
+    $("#current-location-name").text(function () {
+        return "YOU'RE CURRENTLY AT " + currentLocation.PlaceName;
+    });
+    
 }
 
 function errorFunction() {
-    Console.log("error");
+    console.log("error");
 }

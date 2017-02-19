@@ -1,0 +1,211 @@
+﻿.container {
+	height: 460px;
+	width: 730px;
+	border: 1px solid rgba(0,0,0,0.2);
+	/* Add styles here */
+	margin: 15px auto;
+	display: inline-block;
+	
+}
+.divider {
+	width: 740px;
+	margin-bottom: 20px;
+    border-color: #4CAF50;
+}
+
+#navigation {
+    background:  #4CAF50;
+    text-align: right;
+    text-decoration: none;
+    display: block;
+}
+
+.big-container {
+	width: 100%;
+	text-align: center;
+
+}
+
+#header {
+	margin-top: 0px;
+	font-size: 72px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+}
+
+a {
+	color: white;
+    font-family: Lato;
+    margin: 5px;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+}
+
+.selectize-input, .single.selectize-control .focus.selectize-input
+  {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      padding-right: 4px;
+      padding-left: 6px;
+      font-size: 0.82em;
+      background-color: #eeeeee;
+      margin-top: 2px;
+      margin-bottom: 2px;
+  }
+
+#header2 {
+    margin-top: 0px;
+	font-size: 36px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+}
+#map-overlay {
+    
+}
+.container {
+    z-index: 1;
+    opacity: 0.20;
+    transition: opacity .5s ease-out;
+
+}
+
+.container:hover {
+    opacity: 1;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+
+.selected-options {
+    padding: 5px;
+}
+
+.selected-image {
+    float: left;
+    margin: 0px;
+}
+
+.selected-item {
+    float: left;
+    font-size: 12px;
+    text-align: left;
+    font-family: Lato;
+    color: gray;
+    text-transform: uppercase;
+    padding-left: 2px;
+    margin: 0px;
+    
+}
+
+.selected-album-image {
+    width: 75px;
+    height: auto;
+}
+
+.selected-item:hover {
+    color: white;
+}
+
+
+#submit-track {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 8px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-family: Lato;
+}
+
+
+.selecected-title {
+    
+}
+
+#label-for-select {
+    margin-top: 0px;
+	font-size: 36px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+}
+
+.left {
+    float: left;
+    width: 365px;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+#search-bar {
+    width: 600px;
+    margin: auto;
+    padding-top: 130px;
+}
+
+#current-location-name {
+    text-transform: uppercase;
+    margin-top: 0px;
+	font-size: 36px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+}
+
+.contact-logo {
+    width: 25px;
+    height: auto;
+    padding-top: 0px;
+}
+
+#contact-name {
+    padding-top: 75px;
+    margin-top: 0px;
+	font-size: 48px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+}
+
+.contact-info {
+    margin-top: 0px;
+	font-size: 12px;
+	text-align: center;
+	font-family: Lato;
+	color: gray;
+
+}
+
+#contact-photo {
+   
+    width: 150px;
+    margin: 20px auto;
+    height: auto;
+}
+
+#discover-overlay {
+    transition: opacity .5s ease-out;
+    z-index: 2;
+    height: 460px;
+    width: 730px;
+    position: absolute;
+    pointer-events: none;
+    color: black;
+    font-size: 48px;
+    opacity: 1;
+    
+}
+
+
+#discover-overlay:hover {
+    opacity: 0;
+}
+
+

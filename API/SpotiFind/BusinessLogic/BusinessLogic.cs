@@ -41,6 +41,7 @@ namespace SpotiFind.BusinessLogic
         private static string _refreshToken = "AQAxhwzbuLRQWdgVwuK3LmaKfOGUiAGVDLJhWDqNWMAubcY_wvrQwSKCew6ZhUtm4r2ug8uKWFLckroTjELJkTely_Ck_W2BovjhvEmfkDqRVgpMPrMhD4YDNNhX1agxP_U";
         private static string _state = "XSS";
 
+        //private static string _connectionString = @"Server=tcp:spotifind.database.windows.net,1433;Initial Catalog=locationdb3;Persist Security Info=False;User ID=danieldzhang;Password=Dannyz123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         private static string _connectionString = @"Data Source=SEAOTTER\SQLEXPRESS;Initial Catalog=dbspotifind;User ID=ug;Password=ug";
 
         public List<Location> GetLocations()
@@ -86,9 +87,29 @@ namespace SpotiFind.BusinessLogic
             
         }
 
+        public Location GetClosestLocation(float lat, float lon)
+        {
+            List<Location> locationList = new List<Location>();
+            locationList = GetLocationByLatLong(lat, lon);
+            double minDistance = 1000;
+            int leastLocationId = locationList[0].Id;
+            foreach (Location place in locationList)
+            {
+                Place currentPlace = GetPlaceById(place.Id);
+                double distance = Math.Sqrt(Math.Pow(lat - currentPlace.Latitude, 2) + Math.Pow(lon - currentPlace.Longitude, 2));
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    leastLocationId = place.Id;
+                }
+            }
+
+            return GetLocationById(leastLocationId);
+        }
+
         public List<Location> GetLocationByLatLong(float lat, float lon)
         {
-            string sql = "SELECT * FROM[dbspotifind].[dbo].[GeoNames] WHERE ABS(latitude - " + lat + ") < (0.00005) AND ABS(longitude - " + lon + ") < (0.00005)";
+            string sql = "SELECT * FROM[dbspotifind].[dbo].[GeoNames] WHERE ABS(latitude - " + lat + ") < (0.005) AND ABS(longitude - " + lon + ") < (0.005)";
             var list = QueryDB(sql);
             
             List<Location> locationList = new List<Location>();

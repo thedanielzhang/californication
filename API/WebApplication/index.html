@@ -8,53 +8,23 @@
     <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.default.css" rel="stylesheet" />
+    <!--<link href="css/select.css" rel="stylesheet" />-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap2.css" rel="stylesheet" />
     
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCp_BKWbC2xEMhc6ARohpH7g-HV2mXZUE8"></script>
     <script type="text/javascript" src="Scripts/jquery.googlemap.js"></script>
     <script type="text/javascript" src="Scripts/gmaps.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
-    <script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
     
     
     <script src="app.js"></script>
 </head>
-<!--
-<body>
-    <div class="myclass">
-        <div class="div-container" id="map" style="width: 600px; height: 450px;"></div>
-        <div class="div-container" id="search-bar">
-            <label for="select-track">Search:</label>
-            <select id="select-track" class="track" placeholder="Pick a track...">
-                <option value selected="selected"></option>
-            </select>
-            <div class="selectize-control tracks single loading">
-                        
-                <div class="selectize-dropdown single tracks" style="display: none; width: 520px; top: 36px; left: 0px;">
-                    <div class="selectize-dropdown-content"></div>
-                </div>
-            </div>
-        </div>
-        <div class="div-container" id="display-data">
-            <img id="song-img" src="" />
-            <ul>
-                <li id="track-name"></li>
-                <li id="track-album"></li>
-                <li id="track-artist"></li>
-            </ul>
-            <button type="button" id="submit-track">Submit track!</button>
-        </div>
-        <div class="div-container" id="spotify-player-goes-after">
-            <iframe id="custom-spotify-player" src="" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
-        </div>
-    </div>
-</body>
-    -->
+
 <body>
 
     <div id="navigation">
@@ -75,18 +45,20 @@
     <hr class="divider">
     <div class="big-container">
         <div id="explore" class="container">
-            <div id="map-overlay" class="overlay">
-                
-            </div>
+            
             
             <div id="map" style="width: 730px; height: 460px;"></div>
         </div>
         <div id="discover" class="container">
-            
+            <!--<div id="discover-overlay">THIS IS DISCOVER</div> -->
+            <iframe id="custom-spotify-player" src="" width="730" height="460" frameborder="0" allowtransparency="true"></iframe>
         </div>
         <div id="contribute" class="container">
+            <div id="current-location">
+                <p id="current-location-name"></p>
+            </div>
+                
             <div class="div-container" id="search-bar">
-                <label for="select-track">Search:</label>
                 <select id="select-track" class="track" placeholder="Pick a track...">
                     <option value selected="selected"></option>
                 </select>
@@ -96,9 +68,33 @@
                         <div class="selectize-dropdown-content"></div>
                     </div>
                 </div>
+                <button type="button" id="submit-track">CONTRIBUTE</button>
             </div>
+
+            
         </div>
         <div id="contact" class="container">
+            <div id="contact-photo">
+                
+            </div>
+            <div id="contact-name">
+                DANIEL ZHANG
+            </div>
+            <div id="contact-information">
+                <div>
+                    <p class="contact-info">DANIEL.ZHANG@BERKELEY.EDU</p>
+                    <p class="contact-info">HTTP://WWW.THEDANIELZHANG.COM</p>
+                </div>
+                <div>
+                    <img class="contact-logo" src="img/github.png" />
+                    <span class="contact-info">HTTP://WWW.GITHUB.COM/THEDANIELZHANG</span>
+                </div>
+                <div>
+                    <img class="contact-logo" src="img/linkedin.png" />
+                    <span class="contact-info">HTTP://WWW.LINKEDIN.COM/IN/THEDANIELZHANG</span>
+                </div>
+            </div>
+
         </div>
     </div>
 </body>
