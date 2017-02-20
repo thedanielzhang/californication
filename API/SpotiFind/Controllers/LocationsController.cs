@@ -30,9 +30,9 @@ namespace SpotiFind.Controllers
             {
                 locations.Add(new LocationDTO
                 {
-                    Id = location.Id,
-                    Place = location.PlaceId,
-                    PlaylistId = location.PlaylistId
+                    Id = location.geonameid,
+                    
+                    PlaylistId = location.playlistid
                 });
             }
 
@@ -50,9 +50,9 @@ namespace SpotiFind.Controllers
             {
                 locations.Add(new LocationDTO
                 {
-                    Id = location.Id,
-                    Place = location.PlaceId,
-                    PlaylistId = location.PlaylistId
+                    Id = location.geonameid,
+                   
+                    PlaylistId = location.playlistid
                 });
             }
 
@@ -63,9 +63,9 @@ namespace SpotiFind.Controllers
         public async Task<IHttpActionResult> GetLocation(float lat, float lon, string accessToken)
         {
             var l = businessLogic.GetClosestLocation(lat, lon);
-            int id = l.Id;
-            var place = businessLogic.GetPlaceById(id);
-            var playlist = businessLogic.GetPlaylistById(id, accessToken);
+            int id = l.geonameid;
+            var name = l.name;
+            var playlist = businessLogic.GetPlaylistById(l, accessToken);
 
             if (l == null)
             {
@@ -75,16 +75,15 @@ namespace SpotiFind.Controllers
             var locationDetail = new LocationDetailDTO
 
             {
-                Id = l.Id,
-                PlaylistId = l.PlaylistId,
+                Id = l.geonameid,
+                PlaylistId = l.playlistid,
                 PlaylistName = playlist.Name,
 
-                PlaceId = l.PlaceId,
-                PlaceName = place.Name,
-                PlaceAddress = place.Address,
+                
+                PlaceName = l.name,
 
-                PlaceLatitude = place.Latitude,
-                PlaceLongitude = place.Longitude
+                PlaceLatitude = l.latitude,
+                PlaceLongitude = l.longitude
             };
 
             return Ok(locationDetail);
@@ -95,8 +94,8 @@ namespace SpotiFind.Controllers
         public async Task<IHttpActionResult> GetLocation(int id, string accessToken)
         {
             var l = businessLogic.GetLocationById(id);
-            var place = businessLogic.GetPlaceById(id);
-            var playlist = businessLogic.GetPlaylistById(id, accessToken);
+            
+            var playlist = businessLogic.GetPlaylistById(l, accessToken);
 
             if (l == null)
             {
@@ -106,16 +105,16 @@ namespace SpotiFind.Controllers
             var locationDetail = new LocationDetailDTO
 
             {
-                Id = l.Id,
-                PlaylistId = l.PlaylistId,
+                Id = l.geonameid,
+                PlaylistId = l.playlistid,
                 PlaylistName = playlist.Name,
 
-                PlaceId = l.PlaceId,
-                PlaceName = place.Name,
-                PlaceAddress = place.Address,
                 
-                PlaceLatitude = place.Latitude,
-                PlaceLongitude = place.Longitude
+                PlaceName = l.name,
+                
+                
+                PlaceLatitude = l.latitude,
+                PlaceLongitude = l.longitude
             };
 
             return Ok(locationDetail);
@@ -130,7 +129,7 @@ namespace SpotiFind.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != location.Id)
+            if (id != location.geonameid)
             {
                 return BadRequest();
             }
@@ -196,7 +195,7 @@ namespace SpotiFind.Controllers
 
         private bool LocationExists(int id)
         {
-            return db.Locations.Count(e => e.Id == id) > 0;
+            return db.Locations.Count(e => e.geonameid == id) > 0;
         }
     }
 }

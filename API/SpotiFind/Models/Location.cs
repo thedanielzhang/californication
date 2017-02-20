@@ -8,9 +8,13 @@ namespace SpotiFind.Models
 {
     public class Location
     {
-        public int Id { get; set; }
+        [Key]
+        public int geonameid { get; set; }
         [Required]
-        public string PlaceId { get; set; }
-        public string PlaylistId { get; set; }
+        
+        public string playlistid { get; set; }
+        public string name { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
     }
 }

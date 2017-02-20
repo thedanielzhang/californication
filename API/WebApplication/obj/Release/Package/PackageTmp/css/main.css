@@ -66,7 +66,7 @@ a {
 }
 .container {
     z-index: 1;
-    opacity: 0.20;
+    opacity: 0.50;
     transition: opacity .5s ease-out;
 
 }
@@ -190,22 +190,9 @@ ul {
     height: auto;
 }
 
-#discover-overlay {
-    transition: opacity .5s ease-out;
-    z-index: 2;
-    height: 460px;
-    width: 730px;
-    position: absolute;
-    pointer-events: none;
-    color: black;
-    font-size: 48px;
-    opacity: 1;
-    
-}
 
 
-#discover-overlay:hover {
-    opacity: 0;
-}
+
+
 
 

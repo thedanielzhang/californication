@@ -14,7 +14,6 @@ namespace SpotiFind.Models
 
         public string PlaceId { get; set; }
         public string PlaceName { get; set; }
-        public string PlaceAddress { get; set; }
         public double PlaceLatitude { get; set; }
         public double PlaceLongitude { get; set; }
 

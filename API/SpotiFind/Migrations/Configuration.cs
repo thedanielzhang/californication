@@ -42,6 +42,7 @@ namespace SpotiFind.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+            /*
             BusinessLogic businessLogic = new BusinessLogic();
             string accessToken = businessLogic.GetAccessToken();
             SpotifyWebAPI _spotify = businessLogic.GetSpotifyResponseWithAccessToken(accessToken);
@@ -62,8 +63,8 @@ namespace SpotiFind.Migrations
                     Console.WriteLine(dataReader.GetValue(0) + " - " + dataReader.GetValue(1) + " - " + dataReader.GetValue(2));
                     FullPlaylist playlist = _spotify.CreatePlaylist(_userId, dataReader.GetValue(1).ToString());
                     context.Locations.AddOrUpdate(
-                        p => p.Id,
-                        new Location() { PlaceId = dataReader.GetValue(0).ToString(), PlaylistId = playlist.Id }
+                        p => p.geonameid,
+                        new Location() { PlaceId = dataReader.GetValue(0).ToString(), playlistid = playlist.Id }
                     );
                 }
                 dataReader.Close();
@@ -75,6 +76,7 @@ namespace SpotiFind.Migrations
             {
                 Console.Write("Can't open connection!");
             }
+            */
             
 
         }

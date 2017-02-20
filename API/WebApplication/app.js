@@ -1,6 +1,6 @@
 ﻿
-var locationsUri = 'http://localhost:61215/api/locations';
-var authenticationUri = 'http://localhost:61215/api/authentication';
+var locationsUri = 'https://spotifind.azurewebsites.net/api/locations';
+var authenticationUri = 'https://spotifind.azurewebsites.net/api/authentication';
 var authenticationString;
 var map;
 var myLatitude;
@@ -37,7 +37,7 @@ function addMarker(result) {
     map.addMarker({
         lat: result.PlaceLatitude, 
         lng: result.PlaceLongitude, // GPS coords
-        //url: 'http://www.tiloweb.com', // Link to redirect onclick (optional)
+        
         title: 'marker' + result.PlaylistId,
         click: function (e) {
             
