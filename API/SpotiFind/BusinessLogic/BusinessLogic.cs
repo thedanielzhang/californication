@@ -42,7 +42,7 @@ namespace SpotiFind.BusinessLogic
         private static string _state = "XSS";
 
         //private static string _connectionString = @"Server=tcp:spotifind.database.windows.net,1433;Initial Catalog=locationdb3;Persist Security Info=False;User ID=danieldzhang;Password=Dannyz123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        private static string _connectionString = @"Data Source=SEAOTTER\SQLEXPRESS;Initial Catalog=dbspotifind;User ID=ug;Password=ug";
+        private static string _connectionString = @"Data Source=SEAOTTER\SQLEXPRESS;Initial Catalog=spotifinddb;User ID=ug;Password=ug";
 
         public List<Location> GetLocations()
         {
@@ -54,9 +54,15 @@ namespace SpotiFind.BusinessLogic
             {
                 locations.Add(new Location
                 {
-                    Id = location.Id,
-                    PlaceId = location.PlaceId,
-                    PlaylistId = location.PlaylistId
+                    geonameid = location.geonameid,
+                    
+                    playlistid = location.playlistid,
+
+                    name = location.name,
+
+                    latitude = location.latitude,
+
+                    longitude = location.longitude
                 });
             }
 
@@ -67,15 +73,21 @@ namespace SpotiFind.BusinessLogic
         
         public Location GetLocationById(int id)
         {
-            var select = db.Locations.FirstOrDefault(l => l.Id == id);
+            var select = db.Locations.FirstOrDefault(l => l.geonameid == id);
 
             if (select != null)
             {
                 var location = new Location
                                 {
-                                    Id = select.Id,
-                                    PlaceId = select.PlaceId,
-                                    PlaylistId = select.PlaylistId
+                                    geonameid = select.geonameid,
+
+                                    playlistid = select.playlistid,
+
+                                    name = select.name,
+
+                                    latitude = select.latitude,
+
+                                    longitude = select.longitude
                                 };
 
                 return location;
@@ -91,50 +103,34 @@ namespace SpotiFind.BusinessLogic
         {
             List<Location> locationList = new List<Location>();
             locationList = GetLocationByLatLong(lat, lon);
-            double minDistance = 1000;
-            int leastLocationId = locationList[0].Id;
+            double minDistance = 100000;
+            Location closestLocation = locationList[0];
             foreach (Location place in locationList)
             {
-                Place currentPlace = GetPlaceById(place.Id);
-                double distance = Math.Sqrt(Math.Pow(lat - currentPlace.Latitude, 2) + Math.Pow(lon - currentPlace.Longitude, 2));
+                double distance = Math.Sqrt(Math.Pow(lat - place.latitude, 2) + Math.Pow(lon - place.longitude, 2));
                 if (distance < minDistance)
                 {
                     minDistance = distance;
-                    leastLocationId = place.Id;
+                    closestLocation = place;
                 }
             }
 
-            return GetLocationById(leastLocationId);
+            return closestLocation;
         }
 
         public List<Location> GetLocationByLatLong(float lat, float lon)
         {
-            string sql = "SELECT * FROM[dbspotifind].[dbo].[GeoNames] WHERE ABS(latitude - " + lat + ") < (0.005) AND ABS(longitude - " + lon + ") < (0.005)";
-            var list = QueryDB(sql);
-            
+
             List<Location> locationList = new List<Location>();
-            foreach (Place place in list)
+            List<Location> allLocationList = GetLocations();
+            foreach (Location l in allLocationList)
             {
-                var select = db.Locations.FirstOrDefault(l => l.PlaceId == place.Id);
-
-                if (select != null)
+                if ((lat - l.latitude) < 0.005 && (lon - l.longitude) < 0.005)
                 {
-                    var location = new Location
-                    {
-                        Id = select.Id,
-                        PlaceId = select.PlaceId,
-                        PlaylistId = select.PlaylistId
-                    };
-
-                    locationList.Add(location);
+                    locationList.Add(l);
                 }
-                else
-                {
-                    
-                }
-
-
             }
+            
 
             return locationList;
 
@@ -207,31 +203,16 @@ namespace SpotiFind.BusinessLogic
             return list;
         }
 
-        public Place GetPlaceById(int id)
-        {
-            string apiKey = _apiKey; // Your api key
-
-            Location l = GetLocationById(id);
-            var placeId = l.PlaceId;
-
-            string sql = "SELECT * FROM[dbspotifind].[dbo].[GeoNames] WHERE geonameId = " + placeId;
-
-
-            var list = QueryDB(sql);
-
-            return list[0];
-        }
-
         public DateTime FromUnixTime(long unixTime)
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return epoch.AddSeconds(unixTime);
         }
 
-        public FullPlaylist GetPlaylistById(int id, string accessToken)
+        public FullPlaylist GetPlaylistById(Location l, string accessToken)
         {
-            Location l = GetLocationById(id);
-            var playlistId = l.PlaylistId;
+            
+            var playlistId = l.playlistid;
 
             SpotifyWebAPI _spotify = GetSpotifyResponseWithAccessToken(accessToken);
             
@@ -246,14 +227,14 @@ namespace SpotiFind.BusinessLogic
             return result;
         }
 
-        public string PostTrackToLocation(string locationId, string trackId, string accessToken)
+        public string PostTrackToLocation(int locationId, string trackId, string accessToken)
         {
             SpotifyWebAPI _spotify = GetSpotifyResponseWithAccessToken(accessToken);
-            var select = db.Locations.FirstOrDefault(l => l.PlaceId == locationId);
+            var select = db.Locations.FirstOrDefault(l => l.geonameid == locationId);
             var uri = "spotify:track:" + trackId;
             if (select != null)
             {
-                var playlistId = select.PlaylistId;
+                var playlistId = select.playlistid;
                 ErrorResponse response = _spotify.AddPlaylistTrack(_userId, playlistId, uri);
                 if (!response.HasError())
                 {

@@ -37,7 +37,7 @@ function addMarker(result) {
     map.addMarker({
         lat: result.PlaceLatitude, 
         lng: result.PlaceLongitude, // GPS coords
-        //url: 'http://www.tiloweb.com', // Link to redirect onclick (optional)
+        
         title: 'marker' + result.PlaylistId,
         click: function (e) {
             
@@ -126,7 +126,6 @@ $(document).ready(function () {
         async: false,
         success: function (text) {
             authenticationString = text;
-            console.log(authenticationString);
         }
     });
 
@@ -285,11 +284,25 @@ $(document).ready(function () {
 });
 
 function successFunction(position) {
+    $.ajax({
+        type: "GET",
+        url: authenticationUri,
+        async: false,
+        success: function (text) {
+            authenticationString = text;
+            console.log(authenticationString);
+        }
+    });
     myLatitude = position.coords.latitude;
     myLongitude = position.coords.longitude;
+
     console.log('Your latitude is :' + myLatitude + ' and longitude is ' + myLongitude);
     
     ajaxHelper(locationsUri + '?lat=' + myLatitude + '&lon=' + myLongitude, addMultipleMarkers);
+    
+    
+    
+    
     $.ajax({
         type: "GET",
         url: locationsUri + '?lat=' + myLatitude + '&lon=' + myLongitude + '&accessToken=' + authenticationString,
@@ -298,6 +311,7 @@ function successFunction(position) {
             currentLocation = result;
         }
     });
+    
     $("#custom-spotify-player").attr("src", "https://embed.spotify.com/?uri=spotify:user:danielberkeley:playlist:" + currentLocation.PlaylistId + "&theme=white");
     console.log(currentLocation);
     $("#current-location-name").text(function () {
