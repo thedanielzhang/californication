@@ -22,7 +22,7 @@ function authenticationAjax(callback) {
 }
 
 function addMultipleMarkers(result) {
-    console.log(result);
+    //console.log(result);
     
     for (i = 0; i < result.length; i++) {   
         ajaxHelper(locationsUri + '?id=' + result[i].Id + '&accessToken=' + authenticationString, addMarker);
@@ -75,7 +75,7 @@ function dataStore(uri) {
                 //console.log(d);
                 json.push({
                     Id: data[i].Id,
-                    PlaceId: data[i].Place,
+                    
                     PlaylistId: data[i].PlaylistId
                 });
             }
@@ -111,7 +111,7 @@ $(document).ready(function () {
             var target = $(this.hash);
             target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
             if (target.length) {
-                console.log(target);
+                //console.log(target);
                 $('html, body').animate({
                     scrollTop: target.offset().top - 85
                 }, 1000);
@@ -194,7 +194,7 @@ $(document).ready(function () {
                 url: trackUri,
                 dataType: 'json',
                 success: function (jsonData) {
-                    console.log(jsonData);
+                    //console.log(jsonData);
                     //console.log()
                     $('#song-img').attr("src", jsonData.album.images[1].url);
                     $('#display-data').prepend('<img id="theImg" src="' +  + '"/>');
@@ -203,7 +203,7 @@ $(document).ready(function () {
                     $('#track-artist').text("Track artist: " + jsonData.artists[0].name);
                 },
                 error: function () {
-                    console.log("could not load data");
+                    //console.log("could not load data");
                 }
             });
 
@@ -220,12 +220,13 @@ $(document).ready(function () {
     });
 
     $('#submit-track').click(function () {
+        console.log(currentLocation);
         var response = $.ajax({
             type: 'POST',
             url: locationsUri,
             dataType: "application/json",
             data:  {
-                LocationId: currentLocation.PlaceId,
+                LocationId: currentLocation.Id,
                 TrackId: selectize.items,
                 AccessToken: authenticationString
             }
@@ -254,7 +255,7 @@ $(document).ready(function () {
                 lat: 37.870584,
                 lng: -122.260577
             });
-            console.log('Geolocation failed: '+error.message);
+            //console.log('Geolocation failed: '+error.message);
         },
         not_supported: function () {
             map = new GMaps({
@@ -263,7 +264,7 @@ $(document).ready(function () {
                 lat: 37.870584,
                 lng: -122.260577
             });
-            console.log("Your browser does not support geolocation");
+            //console.log("Your browser does not support geolocation");
         },
         always: function() {
             //alert("Done!");
@@ -296,7 +297,7 @@ function successFunction(position) {
     myLatitude = position.coords.latitude;
     myLongitude = position.coords.longitude;
 
-    console.log('Your latitude is :' + myLatitude + ' and longitude is ' + myLongitude);
+    //console.log('Your latitude is :' + myLatitude + ' and longitude is ' + myLongitude);
     
     ajaxHelper(locationsUri + '?lat=' + myLatitude + '&lon=' + myLongitude, addMultipleMarkers);
     
@@ -313,7 +314,7 @@ function successFunction(position) {
     });
     
     $("#custom-spotify-player").attr("src", "https://embed.spotify.com/?uri=spotify:user:danielberkeley:playlist:" + currentLocation.PlaylistId + "&theme=white");
-    console.log(currentLocation);
+    //console.log(currentLocation);
     $("#current-location-name").text(function () {
         return "YOU'RE CURRENTLY AT " + currentLocation.PlaceName;
     });
